@@ -9,10 +9,10 @@ var port = process.env.PORT || 8899;
 var app = express();
 
 var events = new EventEmitter();
-var active = {};
+app.active = {};
 
 function readStream(id, done){
-  var current = active[id];
+  var current = app.active[id];
 
   if (current) {
     debug("found active %s", id);
@@ -36,24 +36,30 @@ var route = /^\/(.*)/;
 
 app.post(route, function(writer, res){
   var id = writer.params[0];
-  if (active[id]) return res.send(409, "Something is already streaming here\n");
+  if (app.active[id]) return res.send(409, "Something is already streaming here\n");
   if (id == "") return res.send(403, "Can't send here\n");
   events.emit('post ' + id, writer);
-  active[id] = writer;
+  app.active[id] = writer;
   
   function cleanup() {
-    writer.unpipe();
-    delete active[id];
+    delete app.active[id];
   }
 
   writer.on('end', function(){
+    debug("end writer %s", id);
     cleanup();
     res.send(200);
   });
   writer.on('close', function(){
+    debug("close writer %s", id);
     cleanup();
   });
   writer.on('error', function(){
+    debug("error writer %s", id);
+    cleanup();
+  });
+  writer.on('finish', function(){
+    debug("finish writer %s", id);
     cleanup();
   });
 
