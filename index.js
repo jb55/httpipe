@@ -1,5 +1,4 @@
 var express = require('express');
-var through = require('through');
 var mkdirp = require('mkdirp').sync;
 var EventEmitter = require('events').EventEmitter;
 var debug = require('debug')('cmdout');
