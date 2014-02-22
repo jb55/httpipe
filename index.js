@@ -34,24 +34,22 @@ app.get('/favicon.ico', function(req, res){
 
 var route = /^\/(.*)/;
 
-app.post(route, function(req, res){
-  var id = req.params[0];
+app.post(route, function(writer, res){
+  var id = writer.params[0];
   if (active[id]) return res.send(409, "Something is already streaming here\n");
   if (id == "") return res.send(403, "Can't send here\n");
-  events.emit('post ' + id, req);
-  active[id] = req;
+  events.emit('post ' + id, writer);
+  active[id] = writer;
 
-  req.on('end', function(){
+  writer.on('end', function(){
     delete active[id];
     res.send(200);
   });
-  req.on('close', function(){
+  writer.on('close', function(){
     delete active[id];
-    req.end();
   });
-  req.on('error', function(){
+  writer.on('error', function(){
     delete active[id];
-    req.end();
   });
 
 });
@@ -64,20 +62,25 @@ app.get(route, function(req, res){
   res.type(req.query.t || path.extname(id) || "application/octet-stream");
   res.writeHead(200);
 
-  readStream(id, function(err, stream){
-    stream.on('end', function(){
+  function cleanup(writer) {
+    writer.unpipe();
+    res.end();
+  }
+
+  readStream(id, function(err, writer){
+    writer.on('end', function(){
       debug("ending readStream");
-      res.end();
+      cleanup(writer);
     });
-    stream.on('close', function(){
+    writer.on('close', function(){
       debug("close readStream");
-      res.end();
+      cleanup(writer);
     });
-    stream.on('error', function(){
+    writer.on('error', function(){
       debug("error readStream");
-      res.end();
+      cleanup(writer);
     });
-    stream.pipe(res);
+    writer.pipe(res);
   });
 });
 
