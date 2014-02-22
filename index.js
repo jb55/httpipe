@@ -47,9 +47,11 @@ app.post(route, function(req, res){
   });
   req.on('close', function(){
     delete active[id];
+    req.end();
   });
   req.on('error', function(){
     delete active[id];
+    req.end();
   });
 
 });
