@@ -43,7 +43,7 @@ app.post(route, function(req, res){
 
   req.on('end', function(){
     delete active[id];
-    res.send(200, "Cheers\n");
+    res.send(200);
   });
   req.on('close', function(){
     delete active[id];
