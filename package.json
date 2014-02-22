@@ -10,12 +10,12 @@
     "test": "make test"
   },
   "dependencies": {
-    "express": "~3.4.8"
+    "express": "~3.4.8",
+    "debug": "~0.7.4"
   },
   "devDependencies": {
     "mocha": "*",
     "should": "*",
-    "debug": "~0.7.4",
     "hyperquest": "~0.2.0"
   }
 }
