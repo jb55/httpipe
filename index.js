@@ -40,16 +40,21 @@ app.post(route, function(writer, res){
   if (id == "") return res.send(403, "Can't send here\n");
   events.emit('post ' + id, writer);
   active[id] = writer;
+  
+  function cleanup() {
+    writer.unpipe();
+    delete active[id];
+  }
 
   writer.on('end', function(){
-    delete active[id];
+    cleanup();
     res.send(200);
   });
   writer.on('close', function(){
-    delete active[id];
+    cleanup();
   });
   writer.on('error', function(){
-    delete active[id];
+    cleanup();
   });
 
 });
@@ -62,23 +67,18 @@ app.get(route, function(req, res){
   res.type(req.query.t || path.extname(id) || "application/octet-stream");
   res.writeHead(200);
 
-  function cleanup(writer) {
-    writer.unpipe();
-    res.end();
-  }
-
   readStream(id, function(err, writer){
     writer.on('end', function(){
       debug("ending readStream");
-      cleanup(writer);
+      res.end();
     });
     writer.on('close', function(){
       debug("close readStream");
-      cleanup(writer);
+      res.end();
     });
     writer.on('error', function(){
       debug("error readStream");
-      cleanup(writer);
+      res.end();
     });
     writer.pipe(res);
   });
