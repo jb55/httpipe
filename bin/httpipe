@@ -2,19 +2,19 @@
 
 var program = require('commander');
 var remote = require('../lib/remote');
+var spawn = require('win-fork');
 var debug = require('debug')('httpipe');
 var utils = require('../lib/utils');
 var request = require('hyperquest');
 
 program
   .version(require('../package').version)
-  .usage("<url>");
+  .usage("[command] or <url>");
 
 program.on('--help', function(){
   console.log('  Commands:');
   console.log();
-  console.log('    <url>            pull from a url');
-  console.log('    post             pipe to a url');
+  console.log('    post           pipe to a url');
   console.log();
   process.exit();
 });
@@ -22,18 +22,32 @@ program.on('--help', function(){
 program.parse(process.argv);
 
 var url = program.args[0];
-if (!url) utils.fatal('<url> or httpipe.io/<path> required');
 
-url = remote(url);
-debug("getting %s", url);
-var req = request(url);
-
-req.on('response', function(res){
-  debug("res %j", res.headers);
-  req.on('data', function(data){
-    if (res.statusCode !== 200)
-      utils.error(res.statusCode + " " + data);
+if (url == "post") {
+  var cmd = 'httpipe-post';
+  var args = program.args.slice(1);
+  debug('spawning %s', cmd);
+  var proc = spawn(cmd, args, { stdio: 'inherit', customFds: [0,1,2] });
+  proc.on('close', function(code){
+    process.exit(code);
   });
-});
+}
+else {
+  if (!url) utils.fatal('[command] or <url> or httpipe.io/<path> required');
 
-req.pipe(process.stdout);
+  url = remote(url);
+  debug("getting %s", url);
+  var req = request(url);
+
+  req.on('response', function(res){
+    debug("res %j", res.headers);
+    req.on('data', function(data){
+      if (res.statusCode !== 200)
+        utils.error(res.statusCode + " " + data);
+    });
+  });
+
+  req.pipe(process.stdout);
+}
+
+
