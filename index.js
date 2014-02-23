@@ -5,7 +5,6 @@ var path = require('path');
 var join = path.join;
 var fs = require('fs');
 
-var port = process.env.PORT || 8899;
 var app = express();
 
 var events = new EventEmitter();
@@ -37,7 +36,7 @@ var route = /^\/(.*)/;
 app.post(route, function(writer, res){
   var id = writer.params[0];
   if (app.active[id]) return res.send(409, "Something is already streaming here\n");
-  if (id == "") return res.send(403, "Can't send here\n");
+  if (id === "") return res.send(403, "Can't send here\n");
   events.emit('post ' + id, writer);
   app.active[id] = writer;
   
@@ -90,5 +89,4 @@ app.get(route, function(req, res){
   });
 });
 
-app.listen(port);
-console.log("httpipe.io listening on port " + port);
+module.exports = app;
