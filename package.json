@@ -1,7 +1,7 @@
 {
   "name": "httpipe",
   "description": "pipe output to http and back",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "keywords": ["pipe", "httpipe"],
   "repository": {
     "url": "git://github.com/jb55/httpipe.git"
