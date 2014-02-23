@@ -24,5 +24,8 @@
   "bin": {
     "httpipe": "bin/httpipe",
     "httpipe-post": "bin/httpipe-post"
+  },
+  "engines": {
+    "node": ">=0.10"
   }
 }
