@@ -8,6 +8,8 @@ var fs = require('fs');
 var app = express();
 
 var events = new EventEmitter();
+
+// TODO: move to redis
 app.active = {};
 
 function readStream(id, done){

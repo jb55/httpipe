@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+var port = process.env.PORT || 8899;
+var app = require('..');
+
+app.listen(port);
+console.log("httpiped listening on port %s", port);
