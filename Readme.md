@@ -28,6 +28,7 @@
 
     $ echo "hi" | httpipe post jb55/myfile.txt
 
+    $ httpipe jb55/myfile.txt
     $ httpipe http://httpipe.io/jb55/myfile.txt
 
 ### Run your own httpipe server
