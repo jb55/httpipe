@@ -66,7 +66,7 @@ app.post(route, function(writer, res){
 });
 
 app.get(route, function(req, res){
-  var id = req.params[0]
+  var id = req.params[0];
   if (id == null) return res.send(200, "Nothing to see here");
 
   debug("id %s", id);
