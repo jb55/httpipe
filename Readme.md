@@ -37,6 +37,18 @@
 
     $ httpiped
 
+## Configuring custom httpipe url
+
+  Add this to your environment:
+
+```bash
+export HTTPIPE_URL=http://myhttpiped.com
+```
+
+  httpipe commands will use this endpoint when doing requests:
+
+  `httpipe myfile.txt` will expand to `httpipe http://myhttpiped.com/myfile.txt`
+
 ## API
 
 ```javascript
