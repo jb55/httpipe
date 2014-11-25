@@ -11,7 +11,17 @@
 
 ## Commands
 
-### Pipe to httpipe.io
+### Human friendly cli tools
+
+  Handy cli tools for httpipe. curl doesn't do streaming `POST`S well so
+  its recommended you use `httpipe post` when `POST`ing.
+
+    $ echo "hi" | httpipe jb55/myfile.txt
+
+    $ httpipe jb55/myfile.txt
+    hi
+
+### Using CURL works!
 
   POST until someone GETs the resource
 
@@ -22,16 +32,6 @@
   The original POST finishes after doing a GET on the resource
 
     $ curl http://httpipe.io/myfile.txt
-
-### Human friendly cli tools
-
-  Handy cli tools for httpipe. curl doesn't do streaming `POST`S well so
-  its recommended you use `httpipe post` when `POST`ing.
-
-    $ echo "hi" | httpipe jb55/myfile.txt
-
-    $ httpipe jb55/myfile.txt
-    hi
 
 ### Run your own httpipe server
 
