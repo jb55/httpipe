@@ -37,7 +37,7 @@
 
     $ httpiped
 
-## Configuring custom httpipe url
+### Configuring custom httpipe url
 
   Add this to your environment:
 
