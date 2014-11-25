@@ -14,7 +14,7 @@
 ### Human friendly cli tools
 
   Handy cli tools for httpipe. curl doesn't do streaming `POST`S well so
-  its recommended you use `httpipe post` when `POST`ing.
+  its recommended you use `httpipe` when piping data
 
     $ echo "hi" | httpipe jb55/myfile.txt
 
