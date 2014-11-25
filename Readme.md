@@ -13,23 +13,25 @@
 
 ### Pipe to httpipe.io
 
+  POST until someone GETs the resource
+
     $ curl -X POST -d@- http://httpipe.io/myfile.txt < myfile.txt
-    $ # ... sleeps waiting for receiver
 
 ### Receive from anywhere else
 
+  The original POST finishes after doing a GET on the resource
+
     $ curl http://httpipe.io/myfile.txt
-    $ # POST finishes after GET 
 
 ### Human friendly cli tools
 
   Handy cli tools for httpipe. curl doesn't do streaming `POST`S well so
   its recommended you use `httpipe post` when `POST`ing.
 
-    $ echo "hi" | httpipe post jb55/myfile.txt
+    $ echo "hi" | httpipe jb55/myfile.txt
 
     $ httpipe jb55/myfile.txt
-    $ httpipe http://httpipe.io/jb55/myfile.txt
+    hi
 
 ### Run your own httpipe server
 

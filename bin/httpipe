@@ -9,32 +9,38 @@ var request = require('hyperquest');
 
 program
   .version(require('../package').version)
-  .usage("[command] or <url>");
+  .usage("<url>");
 
 program.on('--help', function(){
-  console.log('  Commands:');
-  console.log();
-  console.log('    post           pipe to a url');
-  console.log();
+  console.log("  Examples:")
+  console.log("")
+  console.log("    httpipe httpipe.io/jb55/file.txt < file.txt")
+  console.log("")
+  console.log("    httpipe jb55/file.txt < file.txt")
+  console.log("")
+  console.log('    echo "hello" | httpipe jb55/file.txt')
+  console.log("")
+  console.log("    httpipe jb55/file.txt")
   process.exit();
 });
 
 program.parse(process.argv);
 
 var url = program.args[0];
+if (!url) utils.fatal('<url> or httpipe.io/<path> required');
 
-if (url == "post") {
-  var cmd = 'httpipe-post';
-  var args = program.args.slice(1);
-  debug('spawning %s', cmd);
-  var proc = spawn(cmd, args, { stdio: 'inherit', customFds: [0,1,2] });
-  proc.on('close', function(code){
-    process.exit(code);
+if (!process.stdin.isTTY) {
+  var req = request.post(remote(url))
+  req.on('response', function(res){
+    req.on('data', function(data){
+      if (res.statusCode !== 200)
+        utils.error(res.statusCode + " " + data);
+    });
   });
+
+  process.stdin.pipe(req);
 }
 else {
-  if (!url) utils.fatal('[command] or <url> or httpipe.io/<path> required');
-
   url = remote(url);
   debug("getting %s", url);
   var req = request(url);
