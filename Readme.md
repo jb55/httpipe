@@ -8,6 +8,10 @@
   Install with npm
 
     $ npm -g install jb55/httpipe
+    
+  Install with nix
+  
+    $ nix-env -f 'https://github.com/jb55/httpipe/archive/master.tar.gz' -iA package
 
 ## Commands
 
